@@ -1,0 +1,34 @@
+services:
+  backend:
+    image: hozaifa4you/mern-cicd-backend:latest
+    container_name: backend
+    environment:
+      - DATABASE_URL=mongodb://admin:mypassword@mongodb:27017
+      - PORT=3333
+    ports:
+      - "3333:3333" 
+    depends_on:
+      - mongodb
+
+  frontend:
+    image: hozaifa4you/mern-cicd-frontend:latest
+    container_name: frontend
+    ports:
+      - "8080:4173"
+    depends_on:
+      - backend
+
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=mypassword
+    volumes:
+      - mongodb_data:/data/db
+
+volumes:
+  mongodb_data:
+    driver: local
