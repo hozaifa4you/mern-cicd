@@ -1,0 +1,47 @@
+name: MERN CI/CD Pipeline
+
+on:
+   push:
+      branches:
+         - deploy
+   pull_request:
+      branches:
+         - deploy
+
+jobs:
+   check-changes:
+      runs-on: ubuntu-latest
+      outputs:
+         backend_changes: ${{steps.backend_changes.outputs.changes.backend}}
+         frontend_changes: ${{steps.frontend_changes.outputs.changes.frontend}}
+      steps:
+         - name: Checkout code
+           uses: actions/checkout@v4
+
+         - name: Check for backend changes
+           id: backend_changes
+           uses: dorny/paths-filter@v3
+           with:
+              filters: "backend/**"
+
+         - name: Check for frontend changes
+           id: frontend_changes
+           uses: dorny/paths-filter@v3
+           with:
+              filters: "frontend/**"
+
+   backend:
+      needs: check-changes
+      runs-on: ubuntu-latest
+      if: needs.check-changes.outputs.backend_changes == 'true'
+      steps:
+         - name: Set up backend
+           run: echo "Setting up backend..."
+
+   frontend:
+      needs: check-changes
+      runs-on: ubuntu-latest
+      if: needs.check-changes.outputs.frontend_changes == 'true'
+      steps:
+         - name: Set up frontend
+           run: echo "Setting up frontend..."
