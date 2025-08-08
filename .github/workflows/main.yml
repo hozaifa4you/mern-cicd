@@ -22,13 +22,13 @@ jobs:
            id: backend_changes
            uses: dorny/paths-filter@v3
            with:
-              filters: "backend/**"
+              filters: backend/**
 
          - name: Check for frontend changes
            id: frontend_changes
            uses: dorny/paths-filter@v3
            with:
-              filters: "frontend/**"
+              filters: frontend/**
 
    backend:
       needs: check-changes
