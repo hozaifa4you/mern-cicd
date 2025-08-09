@@ -22,13 +22,28 @@ jobs:
 
          - name: Check for changes
            id: changes
-           uses: dorny/paths-filter@v3
-           with:
-              filters: |
-                 backend:
-                   - 'backend/**'
-                 frontend:
-                   - 'frontend/**'
+           run: |
+              # Get changed files
+              CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD)
+              echo "Changed files: $CHANGED_FILES"
+
+              # Check for backend changes
+              if echo "$CHANGED_FILES" | grep -q "^backend/"; then
+                echo "backend=true" >> $GITHUB_OUTPUT
+                echo "Backend changes detected"
+              else
+                echo "backend=false" >> $GITHUB_OUTPUT
+                echo "No backend changes"
+              fi
+
+              # Check for frontend changes
+              if echo "$CHANGED_FILES" | grep -q "^frontend/"; then
+                echo "frontend=true" >> $GITHUB_OUTPUT
+                echo "Frontend changes detected"
+              else
+                echo "frontend=false" >> $GITHUB_OUTPUT
+                echo "No frontend changes"
+              fi
 
          - name: Debug outputs
            run: |
