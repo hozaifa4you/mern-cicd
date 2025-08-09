@@ -17,12 +17,13 @@ jobs:
       steps:
          - name: Checkout Code
            uses: actions/checkout@v4
+           with:
+              fetch-depth: 0
 
          - name: Check for changes
            id: changes
            uses: dorny/paths-filter@v3
            with:
-              base: HEAD~1
               filters: |
                  backend:
                    - 'backend/**'
