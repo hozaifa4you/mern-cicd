@@ -15,6 +15,10 @@ app.get("/", (req, res) => {
    res.send("Welcome to the backend server!");
 });
 
+app.get("/foo", (req, res) => {
+   res.send("Welcome to the foo endpoint!");
+});
+
 dbConnect();
 
 app.listen(process.env.PORT, () => {
