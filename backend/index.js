@@ -4,7 +4,7 @@ const cors = require("cors");
 const dbConnect = require("./db");
 const morgan = require("morgan");
 
-// Test backend only change
+// Backend only test - should trigger only backend job
 dotenv.config();
 const app = express();
 
