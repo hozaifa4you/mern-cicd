@@ -4,7 +4,7 @@ const cors = require("cors");
 const dbConnect = require("./db");
 const morgan = require("morgan");
 
-// Testing custom path filter solution
+// Final test of custom path filter - backend only
 dotenv.config();
 const app = express();
 
