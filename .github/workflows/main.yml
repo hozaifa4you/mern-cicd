@@ -22,6 +22,7 @@ jobs:
            id: changes
            uses: dorny/paths-filter@v3
            with:
+              base: HEAD~1
               filters: |
                  backend:
                    - 'backend/**'
@@ -32,11 +33,13 @@ jobs:
            run: |
               echo "Backend changes: ${{ steps.changes.outputs.backend }}"
               echo "Frontend changes: ${{ steps.changes.outputs.frontend }}"
+              echo "Changed files:"
+              git diff --name-only HEAD~1 HEAD
 
    backend:
       needs: check-changes
       runs-on: ubuntu-latest
-      if: needs.check-changes.outputs.backend_changes == 'true'
+      if: ${{ needs.check-changes.outputs.backend_changes == 'true' }}
       steps:
          - name: Set up backend
            run: |
@@ -45,7 +48,7 @@ jobs:
    frontend:
       needs: check-changes
       runs-on: ubuntu-latest
-      if: needs.check-changes.outputs.frontend_changes == 'true'
+      if: ${{ needs.check-changes.outputs.frontend_changes == 'true' }}
       steps:
          - name: Set up frontend
            run: echo "Setting up frontend..."
