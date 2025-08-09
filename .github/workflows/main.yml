@@ -22,6 +22,7 @@ jobs:
            id: changes
            uses: dorny/paths-filter@v3
            with:
+              base: HEAD~1
               filters: |
                  backend:
                    - 'backend/**'
@@ -32,6 +33,12 @@ jobs:
            run: |
               echo "Backend changed: ${{ steps.changes.outputs.backend }}"
               echo "Frontend changed: ${{ steps.changes.outputs.frontend }}"
+              echo "All changed files in this commit:"
+              git diff --name-only HEAD~1 HEAD || echo "No previous commit to compare"
+              echo "Files matching backend/** pattern:"
+              git diff --name-only HEAD~1 HEAD | grep "^backend/" || echo "No backend files changed"
+              echo "Files matching frontend/** pattern:"
+              git diff --name-only HEAD~1 HEAD | grep "^frontend/" || echo "No frontend files changed"
 
    backend:
       runs-on: ubuntu-latest
