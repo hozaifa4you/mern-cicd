@@ -12,8 +12,8 @@ jobs:
    check-changes:
       runs-on: ubuntu-latest
       outputs:
-         backend_changed: ${{steps.backend_changed.outputs.backend_changed}}
-         frontend_changed: ${{steps.frontend_changed.outputs.frontend_changed}}
+         backend_changed: ${{steps.backend_changed.outputs.backend}}
+         frontend_changed: ${{steps.frontend_changed.outputs.frontend}}
       steps:
          - name: Checkout Code
            uses: actions/checkout@v4
@@ -37,7 +37,7 @@ jobs:
    backend:
       runs-on: ubuntu-latest
       needs: check-changes
-      if: needs.check-changes.outputs.backend_changed == 'true'
+      if: needs.check-changes.outputs.backend == 'true'
       steps:
          - name: Set up backend
            run: |
@@ -47,7 +47,7 @@ jobs:
    frontend:
       runs-on: ubuntu-latest
       needs: check-changes
-      if: needs.check-changes.outputs.frontend_changed == 'true'
+      if: needs.check-changes.outputs.frontend == 'true'
       steps:
          - name: Set up frontend
            run: |
