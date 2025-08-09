@@ -4,7 +4,7 @@ const cors = require("cors");
 const dbConnect = require("./db");
 const morgan = require("morgan");
 
-// Backend only test - should trigger only backend job
+// Testing custom path filter solution
 dotenv.config();
 const app = express();
 
