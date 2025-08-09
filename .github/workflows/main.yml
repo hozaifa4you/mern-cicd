@@ -12,8 +12,8 @@ jobs:
    check-changes:
       runs-on: ubuntu-latest
       outputs:
-         backend_changes: ${{ steps.backend_changes.outputs.changes.backend }}
-         frontend_changes: ${{ steps.frontend_changes.outputs.changes.frontend }}
+         backend_changes: ${{ steps.backend_changes.outputs.backend }}
+         frontend_changes: ${{ steps.frontend_changes.outputs.frontend }}
       steps:
          - name: Checkout code
            uses: actions/checkout@v4
