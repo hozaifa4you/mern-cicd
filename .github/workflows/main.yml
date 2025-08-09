@@ -32,6 +32,8 @@ jobs:
 
          - name: Debug outputs
            run: |
+              echo "Raw backend output: '${{ steps.changes.outputs.backend }}'"
+              echo "Raw frontend output: '${{ steps.changes.outputs.frontend }}'"
               echo "Backend changed: ${{ steps.changes.outputs.backend }}"
               echo "Frontend changed: ${{ steps.changes.outputs.frontend }}"
               echo "All changed files in this commit:"
@@ -44,7 +46,7 @@ jobs:
    backend:
       runs-on: ubuntu-latest
       needs: check-changes
-      if: needs.check-changes.outputs.backend_changed == 'true'
+      if: ${{ needs.check-changes.outputs.backend_changed == 'true' }}
       steps:
          - name: Set up backend
            run: |
@@ -55,7 +57,7 @@ jobs:
    frontend:
       runs-on: ubuntu-latest
       needs: check-changes
-      if: needs.check-changes.outputs.frontend_changed == 'true'
+      if: ${{ needs.check-changes.outputs.frontend_changed == 'true' }}
       steps:
          - name: Set up frontend
            run: |
