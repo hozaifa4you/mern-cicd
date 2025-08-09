@@ -66,3 +66,4 @@ jobs:
               echo "Setting up frontend..."
               echo "Backend changed: ${{ needs.check-changes.outputs.backend_changed }}"
               echo "Frontend changed: ${{ needs.check-changes.outputs.frontend_changed }}"
+              echo ${{toJson(needs.check-changes)}}
