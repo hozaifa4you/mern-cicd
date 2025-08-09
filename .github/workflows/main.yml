@@ -12,43 +12,44 @@ jobs:
    check-changes:
       runs-on: ubuntu-latest
       outputs:
-         backend_changes: ${{ steps.changes.outputs.backend }}
-         frontend_changes: ${{ steps.changes.outputs.frontend }}
+         backend_changed: ${{steps.backend_changed.outputs.backend}}
+         frontend_changed: ${{steps.frontend_changed.outputs.frontend}}
       steps:
-         - name: Checkout code
+         - name: Checkout Code
            uses: actions/checkout@v4
 
-         - name: Check for changes
-           id: changes
+         - name: Check for changes in backend
+           id: backend_changed
            uses: dorny/paths-filter@v3
            with:
-              base: HEAD~1
               filters: |
                  backend:
                    - 'backend/**'
+
+         - name: Check for changes in frontend
+           id: frontend_changed
+           uses: dorny/paths-filter@v3
+           with:
+              filters: |
                  frontend:
                    - 'frontend/**'
 
-         - name: Debug outputs
-           run: |
-              echo "Backend changes: ${{ steps.changes.outputs.backend }}"
-              echo "Frontend changes: ${{ steps.changes.outputs.frontend }}"
-              echo "Changed files:"
-              git diff --name-only HEAD~1 HEAD
-
    backend:
-      needs: check-changes
       runs-on: ubuntu-latest
-      if: ${{ needs.check-changes.outputs.backend_changes == 'true' }}
+      needs: check-changes
+      if: needs.check-changes.outputs.backend_changed == 'true'
       steps:
          - name: Set up backend
            run: |
               echo "Setting up backend..."
+              # Add any additional setup commands here
 
    frontend:
-      needs: check-changes
       runs-on: ubuntu-latest
-      if: ${{ needs.check-changes.outputs.frontend_changes == 'true' }}
+      needs: check-changes
+      if: needs.check-changes.outputs.frontend_changed == 'true'
       steps:
          - name: Set up frontend
-           run: echo "Setting up frontend..."
+           run: |
+              echo "Setting up frontend..."
+              # Add any additional setup commands here
