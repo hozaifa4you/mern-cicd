@@ -45,19 +45,6 @@ jobs:
                 echo "No frontend changes"
               fi
 
-         - name: Debug outputs
-           run: |
-              echo "Raw backend output: '${{ steps.changes.outputs.backend }}'"
-              echo "Raw frontend output: '${{ steps.changes.outputs.frontend }}'"
-              echo "Backend changed: ${{ steps.changes.outputs.backend }}"
-              echo "Frontend changed: ${{ steps.changes.outputs.frontend }}"
-              echo "All changed files in this commit:"
-              git diff --name-only HEAD~1 HEAD || echo "No previous commit to compare"
-              echo "Files matching backend/** pattern:"
-              git diff --name-only HEAD~1 HEAD | grep "^backend/" || echo "No backend files changed"
-              echo "Files matching frontend/** pattern:"
-              git diff --name-only HEAD~1 HEAD | grep "^frontend/" || echo "No frontend files changed"
-
    backend:
       runs-on: ubuntu-latest
       needs: check-changes
