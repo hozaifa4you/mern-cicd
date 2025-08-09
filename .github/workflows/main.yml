@@ -12,27 +12,26 @@ jobs:
    check-changes:
       runs-on: ubuntu-latest
       outputs:
-         backend_changed: ${{steps.backend_changed.outputs.backend}}
-         frontend_changed: ${{steps.frontend_changed.outputs.frontend}}
+         backend_changed: ${{ steps.changes.outputs.backend }}
+         frontend_changed: ${{ steps.changes.outputs.frontend }}
       steps:
          - name: Checkout Code
            uses: actions/checkout@v4
 
-         - name: Check for changes in backend
-           id: backend_changed
+         - name: Check for changes
+           id: changes
            uses: dorny/paths-filter@v3
            with:
               filters: |
                  backend:
                    - 'backend/**'
-
-         - name: Check for changes in frontend
-           id: frontend_changed
-           uses: dorny/paths-filter@v3
-           with:
-              filters: |
                  frontend:
                    - 'frontend/**'
+
+         - name: Debug outputs
+           run: |
+              echo "Backend changed: ${{ steps.changes.outputs.backend }}"
+              echo "Frontend changed: ${{ steps.changes.outputs.frontend }}"
 
    backend:
       runs-on: ubuntu-latest
@@ -42,9 +41,8 @@ jobs:
          - name: Set up backend
            run: |
               echo "Setting up backend..."
-              # Add any additional setup commands here
-              echo ${{needs.check-changes.outputs.backend_changed}}
-              echo ${{needs.check-changes.outputs.frontend_changed}}
+              echo "Backend changed: ${{ needs.check-changes.outputs.backend_changed }}"
+              echo "Frontend changed: ${{ needs.check-changes.outputs.frontend_changed }}"
 
    frontend:
       runs-on: ubuntu-latest
@@ -54,4 +52,5 @@ jobs:
          - name: Set up frontend
            run: |
               echo "Setting up frontend..."
-              # Add any additional setup commands here
+              echo "Backend changed: ${{ needs.check-changes.outputs.backend_changed }}"
+              echo "Frontend changed: ${{ needs.check-changes.outputs.frontend_changed }}"
