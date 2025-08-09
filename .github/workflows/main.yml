@@ -40,7 +40,10 @@ jobs:
       if: needs.check-changes.outputs.backend_changes == 'true'
       steps:
          - name: Set up backend
-           run: echo "Setting up backend..."
+           run: |
+              echo "Setting up backend..."
+              echo ${{needs.check-changes.outputs}}
+              echo ${{needs.check-changes.outputs.backend_changes}}
 
    frontend:
       needs: check-changes
