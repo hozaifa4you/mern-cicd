@@ -18,6 +18,9 @@ app.get("/", (req, res) => {
 app.get("/foo", (req, res) => {
    res.send("Welcome to the foo endpoint!");
 });
+app.get("/bar", (req, res) => {
+   res.send("Welcome to the bar endpoint!");
+});
 
 dbConnect();
 
