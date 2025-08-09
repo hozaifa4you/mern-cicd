@@ -12,27 +12,26 @@ jobs:
    check-changes:
       runs-on: ubuntu-latest
       outputs:
-         backend_changes: ${{ steps.backend_changes.outputs.backend }}
-         frontend_changes: ${{ steps.frontend_changes.outputs.frontend }}
+         backend_changes: ${{ steps.changes.outputs.backend }}
+         frontend_changes: ${{ steps.changes.outputs.frontend }}
       steps:
          - name: Checkout code
            uses: actions/checkout@v4
 
-         - name: Check for backend changes
-           id: backend_changes
+         - name: Check for changes
+           id: changes
            uses: dorny/paths-filter@v3
            with:
               filters: |
                  backend:
                    - 'backend/**'
-
-         - name: Check for frontend changes
-           id: frontend_changes
-           uses: dorny/paths-filter@v3
-           with:
-              filters: |
                  frontend:
                    - 'frontend/**'
+
+         - name: Debug outputs
+           run: |
+              echo "Backend changes: ${{ steps.changes.outputs.backend }}"
+              echo "Frontend changes: ${{ steps.changes.outputs.frontend }}"
 
    backend:
       needs: check-changes
