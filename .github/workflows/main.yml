@@ -50,20 +50,77 @@ jobs:
       needs: check-changes
       if: ${{ needs.check-changes.outputs.backend_changed == 'true' }}
       steps:
-         - name: Set up backend
+         - name: Checkout
+           uses: actions/checkout@v4
+           with:
+              fetch-depth: 0
+
+         - name: "Creating docker image"
            run: |
-              echo "Setting up backend..."
-              echo "Backend changed: ${{ needs.check-changes.outputs.backend_changed }}"
-              echo "Frontend changed: ${{ needs.check-changes.outputs.frontend_changed }}"
+              cd backend
+              docker build -t hozaifa4you/mern-cicd-backend .
+              echo "Image build successful"
+
+         - name: Pushing docker image
+           env:
+              DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
+              DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+           run: |
+              echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+              docker push hozaifa4you/mern-cicd-backend
+              docker logout
+              echo "Docker image pushed successfully"
+
+         - name: Server login & Deploy
+           env:
+              SERVER_USERNAME: ${{secrets.SERVER_USERNAME}}
+              SERVER_PASSWORD: ${{secrets.SERVER_PASSWORD}}
+              SERVER_HOST: ${{secrets.SERVER_HOST}}
+           run: |
+              apt update -y
+              apt install sshpass
+              sshpass -p $SERVER_PASSWORD ssh -o StrictHostKeyChecking=no $SERVER_USERNAME@$SERVER_HOST
+              'sudo docker pull hozaifa4you/mern-cicd-backend &&
+              cd /root/websites/mern-cicd &&
+              sudo docker compose up -d --no-deps --build backend &&
+              exit'
 
    frontend:
       runs-on: ubuntu-latest
       needs: check-changes
       if: ${{ needs.check-changes.outputs.frontend_changed == 'true' }}
       steps:
-         - name: Set up frontend
+         - name: Checkout
+           uses: actions/checkout@v4
+           with:
+              fetch-depth: 0
+
+         - name: "Creating docker image"
            run: |
-              echo "Setting up frontend..."
-              echo "Backend changed: ${{ needs.check-changes.outputs.backend_changed }}"
-              echo "Frontend changed: ${{ needs.check-changes.outputs.frontend_changed }}"
-              echo ${{toJson(needs.check-changes)}}
+              cd frontend
+              docker build -t hozaifa4you/mern-cicd-frontend .
+              echo "Image build successful"
+
+         - name: Pushing docker image
+           env:
+              DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
+              DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+           run: |
+              echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+              docker push hozaifa4you/mern-cicd-frontend
+              docker logout
+              echo "Docker image pushed successfully"
+
+         - name: Server login & Deploy
+           env:
+              SERVER_USERNAME: ${{secrets.SERVER_USERNAME}}
+              SERVER_PASSWORD: ${{secrets.SERVER_PASSWORD}}
+              SERVER_HOST: ${{secrets.SERVER_HOST}}
+           run: |
+              apt update -y
+              apt install sshpass
+              sshpass -p $SERVER_PASSWORD ssh -o StrictHostKeyChecking=no $SERVER_USERNAME@$SERVER_HOST
+              'sudo docker pull hozaifa4you/mern-cicd-frontend &&
+              cd /root/websites/mern-cicd &&
+              sudo docker compose up -d --no-deps --build frontend &&
+              exit'
