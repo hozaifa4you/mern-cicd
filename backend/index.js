@@ -4,8 +4,6 @@ const cors = require("cors");
 const dbConnect = require("./db");
 const morgan = require("morgan");
 
-// try to change username
-
 // Final test of custom path filter - backend only
 dotenv.config();
 const app = express();
