@@ -77,8 +77,8 @@ jobs:
               SERVER_PASSWORD: ${{secrets.SERVER_PASSWORD}}
               SERVER_HOST: ${{secrets.SERVER_HOST}}
            run: |
-              apt update -y
-              apt install sshpass
+              apt-get update -y
+              apt-get install sshpass
               sshpass -p $SERVER_PASSWORD ssh -o StrictHostKeyChecking=no $SERVER_USERNAME@$SERVER_HOST
               'sudo docker pull hozaifa4you/mern-cicd-backend &&
               cd /home/hozaifabinmasud/websites/mern-cicd &&
@@ -117,8 +117,8 @@ jobs:
               SERVER_PASSWORD: ${{secrets.SERVER_PASSWORD}}
               SERVER_HOST: ${{secrets.SERVER_HOST}}
            run: |
-              apt update -y
-              apt install sshpass
+              apt-get update -y
+              apt-get install sshpass
               sshpass -p $SERVER_PASSWORD ssh -o StrictHostKeyChecking=no $SERVER_USERNAME@$SERVER_HOST
               'sudo docker pull hozaifa4you/mern-cicd-frontend &&
               cd /home/hozaifabinmasud/websites/mern-cicd &&
