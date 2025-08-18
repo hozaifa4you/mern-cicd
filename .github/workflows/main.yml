@@ -81,7 +81,7 @@ jobs:
               apt install sshpass
               sshpass -p $SERVER_PASSWORD ssh -o StrictHostKeyChecking=no $SERVER_USERNAME@$SERVER_HOST
               'sudo docker pull hozaifa4you/mern-cicd-backend &&
-              cd /root/websites/mern-cicd &&
+              cd /home/hozaifabinmasud/websites/mern-cicd &&
               sudo docker compose up -d --no-deps --build backend &&
               exit'
 
@@ -121,6 +121,6 @@ jobs:
               apt install sshpass
               sshpass -p $SERVER_PASSWORD ssh -o StrictHostKeyChecking=no $SERVER_USERNAME@$SERVER_HOST
               'sudo docker pull hozaifa4you/mern-cicd-frontend &&
-              cd /root/websites/mern-cicd &&
+              cd /home/hozaifabinmasud/websites/mern-cicd &&
               sudo docker compose up -d --no-deps --build frontend &&
               exit'
