@@ -71,19 +71,16 @@ jobs:
               docker logout
               echo "Docker image pushed successfully"
 
-         - name: Server login & Deploy
-           env:
-              SERVER_USERNAME: ${{secrets.SERVER_USERNAME}}
-              SERVER_PASSWORD: ${{secrets.SERVER_PASSWORD}}
-              SERVER_HOST: ${{secrets.SERVER_HOST}}
-           run: |
-              apt-get update -y
-              apt-get install sshpass
-              sshpass -p $SERVER_PASSWORD ssh -o StrictHostKeyChecking=no $SERVER_USERNAME@$SERVER_HOST
-              'sudo docker pull hozaifa4you/mern-cicd-backend &&
-              cd /home/hozaifabinmasud/websites/mern-cicd &&
-              sudo docker compose up -d --no-deps --build backend &&
-              exit'
+         - name: Server Deploy (Backend)
+           uses: appleboy/ssh-action@v1.0.0
+           with:
+              host: ${{ secrets.SERVER_HOST }}
+              username: ${{ secrets.SERVER_USERNAME }}
+              password: ${{ secrets.SERVER_PASSWORD }}
+              script: |
+                 sudo docker pull hozaifa4you/mern-cicd-backend
+                 cd /home/hozaifabinmasud/websites/mern-cicd
+                 sudo docker compose up -d --no-deps --build backend
 
    frontend:
       runs-on: ubuntu-latest
@@ -111,16 +108,13 @@ jobs:
               docker logout
               echo "Docker image pushed successfully"
 
-         - name: Server login & Deploy
-           env:
-              SERVER_USERNAME: ${{secrets.SERVER_USERNAME}}
-              SERVER_PASSWORD: ${{secrets.SERVER_PASSWORD}}
-              SERVER_HOST: ${{secrets.SERVER_HOST}}
-           run: |
-              apt-get update -y
-              apt-get install sshpass
-              sshpass -p $SERVER_PASSWORD ssh -o StrictHostKeyChecking=no $SERVER_USERNAME@$SERVER_HOST
-              'sudo docker pull hozaifa4you/mern-cicd-frontend &&
-              cd /home/hozaifabinmasud/websites/mern-cicd &&
-              sudo docker compose up -d --no-deps --build frontend &&
-              exit'
+         - name: Server Deploy (Frontend)
+           uses: appleboy/ssh-action@v1.0.0
+           with:
+              host: ${{ secrets.SERVER_HOST }}
+              username: ${{ secrets.SERVER_USERNAME }}
+              password: ${{ secrets.SERVER_PASSWORD }}
+              script: |
+                 sudo docker pull hozaifa4you/mern-cicd-frontend
+                 cd /home/hozaifabinmasud/websites/mern-cicd
+                 sudo docker compose up -d --no-deps --build frontend
